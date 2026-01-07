@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>舌尖上的中国 | 品味华夏美食</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>舌尖上的中国</h1>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cuisines.html" class="nav-link">八大菜系</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">美食视频</a>
+                </li>
+                <li class="nav-item">
+                    <a href="map.html" class="nav-link">美食地图</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+                
+                <!-- 搜索框 -->
+                <li class="nav-item search-container">
+                    <input type="text" class="search-box" placeholder="搜索菜系或菜品...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果动态生成 -->
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 首页内容 -->
+    <main id="main-content">
+        <!-- 首页英雄区 -->
+        <section id="home" class="hero">
+            <div class="hero-content animate">
+                <h1>舌尖上的中国</h1>
+                <p>探索中华美食的千年传承，品味八方风味的独特魅力，<br>从北方面食的劲道，到南方海鲜的鲜美，每一道菜肴都是文化的印记。</p>
+                <a href="cuisines.html" class="btn">开始探索</a>
+            </div>
+        </section>
+        
+        <!-- 快速链接区 -->
+        <section class="quick-links">
+            <div class="container">
+                <div class="quick-links-container">
+                    <a href="cuisines.html#sichuan" class="quick-link-item">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-pepper-hot"></i>
+                        </div>
+                        <span>川菜</span>
+                    </a>
+                    <a href="cuisines.html#cantonese" class="quick-link-item">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-fish"></i>
+                        </div>
+                        <span>粤菜</span>
+                    </a>
+                    <a href="cuisines.html#shandong" class="quick-link-item">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-drumstick-bite"></i>
+                        </div>
+                        <span>鲁菜</span>
+                    </a>
+                    <a href="videos.html" class="quick-link-item">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <span>美食视频</span>
+                    </a>
+                    <a href="map.html" class="quick-link-item">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <span>美食地图</span>
+                    </a>
+                    <a href="about.html" class="quick-link-item">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <span>关于我们</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特色推荐区 -->
+        <section id="featured" class="cuisine-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>今日推荐</h2>
+                    <p>精选三大热门菜系，感受中华美食的魅力</p>
+                </div>
+                
+                <div class="cuisine-cards">
+                    <!-- 川菜推荐 -->
+                    <div class="cuisine-card animate opacity-0">
+                        <div class="card-img">
+                            <img src="./川菜.jpg" alt="川菜">
+                        </div>
+                        <div class="card-content">
+                            <h3>川菜 · 麻辣鲜香</h3>
+                            <div class="card-tags">
+                                <span class="tag">麻辣</span>
+                                <span class="tag">鲜香</span>
+                                <span class="tag">百菜百味</span>
+                            </div>
+                            <p>四川盆地孕育的麻辣传奇，一菜一格，百菜百味，以麻辣鲜香著称，在中国烹饪史上占有重要地位。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">麻婆豆腐</span>
+                                <span class="dish-tag">回锅肉</span>
+                                <span class="dish-tag">水煮鱼</span>
+                            </div>
+                            <a href="cuisines.html#sichuan" class="btn" style="margin-top: 1rem; padding: 10px 25px; font-size: 1rem;">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 粤菜推荐 -->
+                    <div class="cuisine-card animate opacity-0 delay-1">
+                        <div class="card-img">
+                            <img src="./粤菜.jpg" alt="粤菜">
+                        </div>
+                        <div class="card-content">
+                            <h3>粤菜 · 原汁原味</h3>
+                            <div class="card-tags">
+                                <span class="tag">清淡</span>
+                                <span class="tag">鲜美</span>
+                                <span class="tag">追求本味</span>
+                            </div>
+                            <p>岭南风味的精髓，追求食材本味，清淡鲜美，由广州菜、潮州菜、东江菜三种地方风味组成。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">白切鸡</span>
+                                <span class="dish-tag">烧鹅</span>
+                                <span class="dish-tag">肠粉</span>
+                            </div>
+                            <a href="cuisines.html#cantonese" class="btn" style="margin-top: 1rem; padding: 10px 25px; font-size: 1rem;">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 苏菜推荐 -->
+                    <div class="cuisine-card animate opacity-0 delay-2">
+                        <div class="card-img">
+                            <img src="./苏菜.jpg" alt="苏菜">
+                        </div>
+                        <div class="card-content">
+                            <h3>苏菜 · 精致细腻</h3>
+                            <div class="card-tags">
+                                <span class="tag">精致</span>
+                                <span class="tag">鲜美</span>
+                                <span class="tag">刀工精湛</span>
+                            </div>
+                            <p>江南水乡的烹饪艺术，刀工精湛，造型美观，注重本味，讲究火候，口味偏甜，造型精美。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">松鼠鳜鱼</span>
+                                <span class="dish-tag">盐水鸭</span>
+                                <span class="dish-tag">狮子头</span>
+                            </div>
+                            <a href="cuisines.html#jiangsu" class="btn" style="margin-top: 1rem; padding: 10px 25px; font-size: 1rem;">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="cuisines.html" class="btn">查看所有八大菜系</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 视频预览区 -->
+        <section id="video-preview" class="video-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2 style="color: var(--text-light);">美食制作视频</h2>
+                    <p style="color: rgba(255,255,255,0.8);">观看名厨现场制作，学习地道烹饪技巧</p>
+                </div>
+                
+                <div class="video-grid">
+                    <div class="video-card" onclick="playVideo('川菜制作：麻婆豆腐', 'videos/sichuan.mp4')">
+                        <div class="video-thumbnail">
+                            <img src="./2.jpg" alt="川菜制作">
+                            <div class="video-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>川菜制作：麻婆豆腐</h3>
+                            <p>《舌尖上的中国》经典川菜制作过程，展现麻辣鲜香的烹饪艺术。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" onclick="playVideo('粤菜制作：白切鸡', 'videos/baizhanji.mp4')">
+                        <div class="video-thumbnail">
+                            <img src="./0.png" alt="粤菜制作">
+                            <div class="video-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>粤菜制作：白切鸡</h3>
+                            <p>学习制作正宗广式白切鸡，体验粤菜追求原汁原味的烹饪哲学。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" onclick="playVideo('浙菜制作：西湖醋鱼', 'videos/xihu.mp4')">
+                        <div class="video-thumbnail">
+                            <img src="./3.png" alt="浙菜制作">
+                            <div class="video-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>浙菜制作：西湖醋鱼</h3>
+                            <p>展示浙菜经典西湖醋鱼的制作过程，体验南方菜系的烹饪技艺。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="videos.html" class="btn">查看更多美食视频</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 地图预览区 -->
+        <section id="map-preview" class="map-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>中华美食地图</h2>
+                    <p>点击地图上的标记，探索各地特色美食</p>
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-info animate opacity-0">
+                        <h3>美食地理分布</h3>
+                        <p>中国地域广阔，不同地区的气候、物产和饮食习惯形成了各具特色的地方菜系。从东北的炖菜到西南的辣味，从沿海的海鲜到内陆的山珍，每一种美食都是当地文化与自然的结晶。</p>
+                        <p>点击地图上的标记点，可以了解该地区的特色美食及其背后的文化故事。</p>
+                        <div style="margin-top: 2rem;">
+                            <h4>区域特色</h4>
+                            <ul style="margin-top: 1rem;">
+                                <li><i class="fas fa-pepper-hot" style="color: var(--primary-color); margin-right: 10px;"></i> 西南地区：麻辣鲜香</li>
+                                <li><i class="fas fa-fish" style="color: var(--accent-color); margin-right: 10px;"></i> 东南沿海：海鲜为主</li>
+                                <li><i class="fas fa-wheat-alt" style="color: var(--secondary-color); margin-right: 10px;"></i> 北方地区：面食丰富</li>
+                                <li><i class="fas fa-utensil-spoon" style="color: var(--primary-dark); margin-right: 10px;"></i> 江南地区：精致细腻</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="map-visual">
+                        <!-- 地图标记点 -->
+                        <div class="map-point" style="top: 30%; left: 25%;" data-region="四川" data-food="麻辣火锅">
+                            <div class="map-tooltip">四川 - 麻辣火锅</div>
+                        </div>
+                        <div class="map-point" style="top: 50%; left: 70%;" data-region="广东" data-food="广式早茶">
+                            <div class="map-tooltip">广东 - 广式早茶</div>
+                        </div>
+                        <div class="map-point" style="top: 40%; left: 60%;" data-region="江苏" data-food="扬州炒饭">
+                            <div class="map-tooltip">江苏 - 扬州炒饭</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="map.html" class="btn">查看完整美食地图</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 视频播放模态框 -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <div class="close-video" onclick="closeVideo()">
+                <i class="fas fa-times"></i>
+            </div>
+            
+            <div class="video-container"></div>
+            
+            <div style="color: white; padding: 20px; text-align: center;">
+                <h3 id="videoTitle"></h3>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>舌尖上的中国</h3>
+                    <p>探索中华美食的千年传承，品味八方风味的独特魅力。</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="cuisines.html">八大菜系</a></li>
+                        <li><a href="videos.html">美食视频</a></li>
+                        <li><a href="map.html">美食地图</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 北京市朝阳区美食文化中心</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> +86 10 1234 5678</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@tasteofchina.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 舌尖上的中国 版权所有 | 设计灵感来源于《舌尖上的中国》纪录片</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="shared.js"></script>
+</body>
+</html>

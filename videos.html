@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美食视频 | 舌尖上的中国</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* 视频页面特有样式 */
+        .videos-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+        
+        .videos-hero-content h1 {
+            font-size: 4rem;
+            font-family: 'Ma Shan Zheng', cursive;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .video-filters {
+            background-color: white;
+            padding: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+        }
+        
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-btn {
+            padding: 10px 25px;
+            background-color: #f5f5f5;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            border: 2px solid transparent;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .video-item {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .video-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .video-thumb {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .video-item:hover .video-thumb img {
+            transform: scale(1.05);
+        }
+        
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(198, 40, 40, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .video-play-btn:hover {
+            background-color: var(--primary-color);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .video-info {
+            padding: 1.5rem;
+        }
+        
+        .video-info h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .video-category {
+            background-color: var(--secondary-light);
+            color: var(--text-dark);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .video-desc {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .playlist-section {
+            margin-top: 4rem;
+        }
+        
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .playlist-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .playlist-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .playlist-thumb {
+            height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .playlist-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .playlist-count {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .playlist-info {
+            padding: 1rem;
+        }
+        
+        .playlist-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 3rem;
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .page-btn:hover,
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .video-sidebar {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+        
+        .sidebar-title {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .top-videos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .top-video-item {
+            display: flex;
+            gap: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .top-video-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .top-video-thumb {
+            width: 80px;
+            height: 60px;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .top-video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .top-video-info h5 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        .top-video-info .views {
+            color: #666;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>舌尖上的中国</h1>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cuisines.html" class="nav-link">八大菜系</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link active">美食视频</a>
+                </li>
+                <li class="nav-item">
+                    <a href="map.html" class="nav-link">美食地图</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+                
+                <!-- 搜索框 -->
+                <li class="nav-item search-container">
+                    <input type="text" class="search-box" placeholder="搜索视频...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果动态生成 -->
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 视频页面内容 -->
+    <main id="main-content">
+        <!-- 页面英雄区 -->
+        <section class="videos-hero">
+            <div class="videos-hero-content">
+                <h1>美食制作视频</h1>
+                <p style="font-size: 1.5rem;">观看名厨现场制作，学习地道烹饪技巧</p>
+            </div>
+        </section>
+        
+        <!-- 视频筛选 -->
+        <div class="video-filters">
+            <div class="container">
+                <div class="filter-container">
+                    <button class="filter-btn active" data-filter="all">全部视频</button>
+                    <button class="filter-btn" data-filter="sichuan">川菜</button>
+                    <button class="filter-btn" data-filter="cantonese">粤菜</button>
+                    <button class="filter-btn" data-filter="shandong">鲁菜</button>
+                    <button class="filter-btn" data-filter="jiangsu">苏菜</button>
+                    <button class="filter-btn" data-filter="zhejiang">浙菜</button>
+                    <button class="filter-btn" data-filter="fujian">闽菜</button>
+                    <button class="filter-btn" data-filter="hunan">湘菜</button>
+                    <button class="filter-btn" data-filter="anhui">徽菜</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 视频展示区 -->
+        <section class="video-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2 style="color: var(--text-light);">《舌尖上的中国》美食制作</h2>
+                    <p style="color: rgba(255,255,255,0.8);">通过镜头感受中华美食的魅力与制作过程</p>
+                </div>
+                
+                <div class="videos-grid" id="videosContainer">
+                    <!-- 视频卡片将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination">
+                    <div class="page-btn active">1</div>
+                    <div class="page-btn">2</div>
+                    <div class="page-btn">3</div>
+                    <div class="page-btn">4</div>
+                    <div class="page-btn">></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 播放列表 -->
+        <section class="playlist-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>精选播放列表</h2>
+                    <p>按菜系分类，系统学习烹饪技巧</p>
+                </div>
+                
+                <div class="playlist-grid">
+                    <div class="playlist-item">
+                        <div class="playlist-thumb">
+                            <img src="./川菜.jpg" alt="川菜系列">
+                            <div class="playlist-count">8个视频</div>
+                        </div>
+                        <div class="playlist-info">
+                            <h4>川菜麻辣系列</h4>
+                            <p style="color: #666; font-size: 0.9rem;">从基础到精通，学习正宗川菜</p>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-thumb">
+                            <img src="./粤菜.jpg" alt="粤菜系列">
+                            <div class="playlist-count">6个视频</div>
+                        </div>
+                        <div class="playlist-info">
+                            <h4>粤菜清淡系列</h4>
+                            <p style="color: #666; font-size: 0.9rem;">学习粤菜原汁原味的烹饪技巧</p>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-thumb">
+                            <img src="./苏菜.jpg" alt="苏菜系列">
+                            <div class="playlist-count">5个视频</div>
+                        </div>
+                        <div class="playlist-info">
+                            <h4>苏菜刀工系列</h4>
+                            <p style="color: #666; font-size: 0.9rem;">学习苏菜精湛的刀工技艺</p>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-thumb">
+                            <img src="./鲁菜.jpg" alt="鲁菜系列">
+                            <div class="playlist-count">7个视频</div>
+                        </div>
+                        <div class="playlist-info">
+                            <h4>鲁菜汤品系列</h4>
+                            <p style="color: #666; font-size: 0.9rem;">学习鲁菜精于制汤的秘诀</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 视频分类展示 -->
+        <section class="cuisine-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>按菜系分类视频</h2>
+                    <p>选择您感兴趣的菜系，观看相关制作视频</p>
+                </div>
+                
+                <div class="cuisine-cards">
+                    <!-- 川菜视频 -->
+                    <div class="cuisine-card animate opacity-0">
+                        <div class="card-img">
+                            <img src="./川菜.jpg" alt="川菜视频">
+                        </div>
+                        <div class="card-content">
+                            <h3>川菜视频系列</h3>
+                            <div class="card-tags">
+                                <span class="tag">麻辣</span>
+                                <span class="tag">鲜香</span>
+                                <span class="tag">烹饪技巧</span>
+                            </div>
+                            <p>包含麻婆豆腐、回锅肉、水煮鱼等经典川菜的制作视频，学习川菜麻辣鲜香的烹饪艺术。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">麻婆豆腐</span>
+                                <span class="dish-tag">宫保鸡丁</span>
+                                <span class="dish-tag">水煮鱼</span>
+                                <span class="dish-tag">回锅肉</span>
+                            </div>
+                            <button class="btn" onclick="filterVideos('sichuan')" style="margin-top: 1rem; padding: 10px 25px; font-size: 1rem;">
+                                观看川菜视频
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 粤菜视频 -->
+                    <div class="cuisine-card animate opacity-0 delay-1">
+                        <div class="card-img">
+                            <img src="./粤菜.jpg" alt="粤菜视频">
+                        </div>
+                        <div class="card-content">
+                            <h3>粤菜视频系列</h3>
+                            <div class="card-tags">
+                                <span class="tag">清淡</span>
+                                <span class="tag">鲜美</span>
+                                <span class="tag">原汁原味</span>
+                            </div>
+                            <p>包含白切鸡、烧鹅、肠粉等经典粤菜的制作视频，学习粤菜追求原汁原味的烹饪哲学。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">白切鸡</span>
+                                <span class="dish-tag">烧鹅</span>
+                                <span class="dish-tag">肠粉</span>
+                                <span class="dish-tag">蜜汁叉烧</span>
+                            </div>
+                            <button class="btn" onclick="filterVideos('cantonese')" style="margin-top: 1rem; padding: 10px 25px; font-size: 1rem;">
+                                观看粤菜视频
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 苏菜视频 -->
+                    <div class="cuisine-card animate opacity-0 delay-2">
+                        <div class="card-img">
+                            <img src="./苏菜.jpg" alt="苏菜视频">
+                        </div>
+                        <div class="card-content">
+                            <h3>苏菜视频系列</h3>
+                            <div class="card-tags">
+                                <span class="tag">精致</span>
+                                <span class="tag">刀工</span>
+                                <span class="tag">造型美观</span>
+                            </div>
+                            <p>包含松鼠鳜鱼、盐水鸭、狮子头等经典苏菜的制作视频，学习苏菜精湛的刀工技艺。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">松鼠鳜鱼</span>
+                                <span class="dish-tag">盐水鸭</span>
+                                <span class="dish-tag">狮子头</span>
+                                <span class="dish-tag">大煮干丝</span>
+                            </div>
+                            <button class="btn" onclick="filterVideos('jiangsu')" style="margin-top: 1rem; padding: 10px 25px; font-size: 1rem;">
+                                观看苏菜视频
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 热门视频排行 -->
+        <section class="map-section">
+            <div class="container">
+                <div class="map-container">
+                    <div class="map-info">
+                        <h3>热门视频排行</h3>
+                        <p>根据观看次数和用户评价，我们为您推荐以下热门美食制作视频，帮助您快速掌握烹饪技巧。</p>
+                        
+                        <div class="top-videos-list" style="margin-top: 2rem;">
+                            <div class="top-video-item" onclick="playVideo('麻婆豆腐制作', 'videos/sichuan.mp4')">
+                                <div class="top-video-thumb">
+                                    <img src="./2.jpg" alt="麻婆豆腐">
+                                </div>
+                                <div class="top-video-info">
+                                    <h5>麻婆豆腐制作</h5>
+                                    <div class="views">🔥 12.5万次观看</div>
+                                </div>
+                            </div>
+                            
+                            <div class="top-video-item" onclick="playVideo('白切鸡制作', 'videos/cantonese.mp4')">
+                                <div class="top-video-thumb">
+                                    <img src="./0.png" alt="白切鸡">
+                                </div>
+                                <div class="top-video-info">
+                                    <h5>白切鸡制作</h5>
+                                    <div class="views">🔥 8.7万次观看</div>
+                                </div>
+                            </div>
+                            
+                            <div class="top-video-item" onclick="playVideo('西湖醋鱼制作', 'videos/zhejiang.mp4')">
+                                <div class="top-video-thumb">
+                                    <img src="./3.png" alt="西湖醋鱼">
+                                </div>
+                                <div class="top-video-info">
+                                    <h5>西湖醋鱼制作</h5>
+                                    <div class="views">🔥 7.2万次观看</div>
+                                </div>
+                            </div>
+                            
+                            <div class="top-video-item" onclick="playVideo('松鼠鳜鱼制作', 'videos/jiangsu.mp4')">
+                                <div class="top-video-thumb">
+                                    <img src="./苏菜.jpg" alt="松鼠鳜鱼">
+                                </div>
+                                <div class="top-video-info">
+                                    <h5>松鼠鳜鱼制作</h5>
+                                    <div class="views">🔥 6.8万次观看</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-sidebar">
+                        <h3 class="sidebar-title">烹饪小贴士</h3>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4><i class="fas fa-lightbulb" style="color: var(--secondary-color); margin-right: 10px;"></i> 火候控制</h4>
+                            <p style="font-size: 0.95rem; color: #666;">不同的菜品需要不同的火候，大火快炒保持食材鲜嫩，小火慢炖使味道充分融合。</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4><i class="fas fa-knife" style="color: var(--primary-color); margin-right: 10px;"></i> 刀工技巧</h4>
+                            <p style="font-size: 0.95rem; color: #666;">均匀的切工不仅美观，还能保证食材受热均匀，影响最终的口感和味道。</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4><i class="fas fa-mortar-pestle" style="color: var(--accent-color); margin-right: 10px;"></i> 调味顺序</h4>
+                            <p style="font-size: 0.95rem; color: #666;">正确的调味顺序能最大程度激发食材的鲜味，一般先放料酒去腥，后放盐调味。</p>
+                        </div>
+                        
+                        <div>
+                            <h4><i class="fas fa-clock" style="color: var(--primary-dark); margin-right: 10px;"></i> 时间把握</h4>
+                            <p style="font-size: 0.95rem; color: #666;">烹饪时间直接影响菜品质量，过短不熟，过长变老，要根据食材特性精确控制。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 视频播放模态框 -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <div class="close-video" onclick="closeVideo()">
+                <i class="fas fa-times"></i>
+            </div>
+            
+            <div class="video-container"></div>
+            
+            <div style="color: white; padding: 20px; text-align: center;">
+                <h3 id="videoTitle"></h3>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>舌尖上的中国</h3>
+                    <p>探索中华美食的千年传承，品味八方风味的独特魅力。</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="cuisines.html">八大菜系</a></li>
+                        <li><a href="videos.html">美食视频</a></li>
+                        <li><a href="map.html">美食地图</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 北京市朝阳区美食文化中心</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> +86 10 1234 5678</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@tasteofchina.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 舌尖上的中国 版权所有 | 设计灵感来源于《舌尖上的中国》纪录片</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="shared.js"></script>
+    <script>
+        // 视频数据
+        const videoData = [
+            {id: 1, title: "麻婆豆腐制作教程", desc: "学习正宗川菜麻婆豆腐的制作方法，掌握麻辣鲜香的烹饪技巧", category: "sichuan", duration: "08:32", views: "125,432", thumb: "./2.jpg", url: "videos/sichuan.mp4"},
+            {id: 2, title: "白切鸡制作全过程", desc: "广式白切鸡的制作秘诀，皮爽肉滑，原汁原味", category: "cantonese", duration: "12:15", views: "87,654", thumb: "./0.png", url: "videos/cantonese.mp4"},
+            {id: 3, title: "西湖醋鱼经典做法", desc: "杭州传统名菜西湖醋鱼的制作过程，酸甜适口", category: "zhejiang", duration: "10:48", views: "72,189", thumb: "./3.png", url: "videos/zhejiang.mp4"},
+            {id: 4, title: "松鼠鳜鱼刀工展示", desc: "苏菜代表作松鼠鳜鱼的刀工技巧和烹饪方法", category: "jiangsu", duration: "15:20", views: "68,743", thumb: "./苏菜.jpg", url: "videos/jiangsu.mp4"},
+            {id: 5, title: "剁椒鱼头家常做法", desc: "湘菜经典剁椒鱼头的家庭版制作教程", category: "hunan", duration: "09:45", views: "54,321", thumb: "./湘菜.jpg", url: "videos/hunan.mp4"},
+            {id: 6, title: "臭鳜鱼独特风味", desc: "徽菜代表臭鳜鱼的制作，闻臭吃香", category: "anhui", duration: "11:30", views: "49,876", thumb: "./1.jpg", url: "videos/32.mp4"},
+            {id: 7, title: "葱烧海参鲁菜精髓", desc: "学习鲁菜经典葱烧海参，掌握制汤技巧", category: "shandong", duration: "14:22", views: "42,567", thumb: "./葱烧海参.jpg", url: "videos/shandong.mp4"},
+            {id: 8, title: "佛跳墙豪华制作", desc: "闽菜代表佛跳墙的完整制作过程", category: "fujian", duration: "18:40", views: "38,942", thumb: "./闽菜.jpg", url: "videos/fujian.mp4"},
+            {id: 9, title: "宫保鸡丁快手菜", desc: "川菜经典宫保鸡丁的快速做法", category: "sichuan", duration: "07:15", views: "67,890", thumb: "./宫保鸡丁.jpg", url: "videos/gongbaojiding.mp4"},
+            {id: 10, title: "烧腊制作技巧", desc: "广式烧腊的制作方法和调味秘诀", category: "cantonese", duration: "13:50", views: "53,218", thumb: "./烧鹅.jpg", url: "videos/guangshishaola.mp4"},
+            {id: 11, title: "糖醋鲤鱼鲁菜经典", desc: "鲁菜糖醋鲤鱼的制作，外酥里嫩", category: "shandong", duration: "11:25", views: "45,678", thumb: "./糖醋鲤鱼.jpg", url: "videos/tangculiyu.mp4"},
+            {id: 12, title: "盐水鸭江南风味", desc: "南京盐水鸭的制作，咸香适口", category: "jiangsu", duration: "09:18", views: "41,234", thumb: "./盐水鸭.jpg", url: "videos/yanshuiya.mp4"}
+        ];
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 渲染所有视频
+            renderVideos(videoData);
+            
+            // 筛选功能
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有active类
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // 添加当前active类
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterVideos(filter);
+                });
+            });
+            
+            // 分页功能
+            const pageBtns = document.querySelectorAll('.page-btn');
+            pageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    pageBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // 这里可以添加加载对应页面视频的逻辑
+                });
+            });
+        });
+        
+        // 渲染视频函数
+        function renderVideos(videos) {
+            const container = document.getElementById('videosContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            videos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.setAttribute('data-category', video.category);
+                
+                videoItem.innerHTML = `
+                    <div class="video-thumb">
+                        <img src="${video.thumb}" alt="${video.title}" onerror="this.src='https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                        <div class="video-play-btn" onclick="playVideo('${video.title}', '${video.url}')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>${video.title}</h3>
+                        <div class="video-meta">
+                            <span class="video-category">${getCategoryName(video.category)}</span>
+                            <span><i class="far fa-eye"></i> ${video.views}</span>
+                        </div>
+                        <p class="video-desc">${video.desc}</p>
+                    </div>
+                `;
+                
+                container.appendChild(videoItem);
+            });
+        }
+        
+        // 筛选视频
+        function filterVideos(category) {
+            const allVideos = document.querySelectorAll('.video-item');
+            
+            if (category === 'all') {
+                allVideos.forEach(video => {
+                    video.style.display = 'block';
+                });
+            } else {
+                allVideos.forEach(video => {
+                    if (video.getAttribute('data-category') === category) {
+                        video.style.display = 'block';
+                    } else {
+                        video.style.display = 'none';
+                    }
+                });
+            }
+            
+            // 更新筛选按钮状态
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-filter') === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // 滚动到视频区域
+            document.querySelector('.video-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 获取分类名称
+        function getCategoryName(category) {
+            const categories = {
+                'sichuan': '川菜',
+                'cantonese': '粤菜',
+                'shandong': '鲁菜',
+                'jiangsu': '苏菜',
+                'zhejiang': '浙菜',
+                'fujian': '闽菜',
+                'hunan': '湘菜',
+                'anhui': '徽菜'
+            };
+            return categories[category] || '美食';
+        }
+    </script>
+</body>
+</html>

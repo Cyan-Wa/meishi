@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美食地图 | 舌尖上的中国</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* 地图页面特有样式 */
+        .map-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('地图.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+        
+        .map-hero-content h1 {
+            font-size: 4rem;
+            font-family: 'Ma Shan Zheng', cursive;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .interactive-map {
+            background-color: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin: 2rem auto;
+            position: relative;
+            height: 600px;
+            overflow: hidden;
+        }
+        
+        .china-map {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-image: url('地图.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .map-region {
+            position: absolute;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+        
+        .region-dot {
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            transition: var(--transition);
+            box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7);
+            animation: pulse 2s infinite;
+        }
+        
+        .region-dot:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: var(--primary-light);
+        }
+        
+        .region-info {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 200px;
+            max-width: 300px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 20;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateX(-50%);
+            left: 50%;
+            bottom: 30px;
+        }
+        
+        .region-info:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid rgba(0, 0, 0, 0.85);
+        }
+        
+        .region-dot:hover .region-info {
+            opacity: 1;
+        }
+        
+        .region-info h4 {
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .region-info p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .region-dishes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .region-dish {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .region-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .region-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+            color: var(--secondary-color);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .modal-dishes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .modal-dish-item {
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .modal-dish-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .modal-dish-img {
+            width: 100%;
+            height: 120px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .modal-dish-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .region-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .province-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .province-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .province-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .province-img {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .province-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .province-card:hover .province-img img {
+            transform: scale(1.1);
+        }
+        
+        .province-content {
+            padding: 1.5rem;
+        }
+        
+        .province-content h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .province-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 0.5rem 0;
+        }
+        
+        .province-tag {
+            background-color: var(--secondary-light);
+            color: var(--text-dark);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .map-legend {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .climate-zones {
+            margin-top: 4rem;
+        }
+        
+        .zone-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .zone-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .zone-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .zone-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(198, 40, 40, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>舌尖上的中国</h1>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cuisines.html" class="nav-link">八大菜系</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">美食视频</a>
+                </li>
+                <li class="nav-item">
+                    <a href="map.html" class="nav-link active">美食地图</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+                
+                <!-- 搜索框 -->
+                <li class="nav-item search-container">
+                    <input type="text" class="search-box" placeholder="搜索地区美食...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果动态生成 -->
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 地图页面内容 -->
+    <main id="main-content">
+        <!-- 页面英雄区 -->
+        <section class="map-hero">
+            <div class="map-hero-content">
+                <h1>中华美食地图</h1>
+                <p style="font-size: 1.5rem;">探索各地特色美食，品味地域文化差异</p>
+            </div>
+        </section>
+        
+        <!-- 交互式地图 -->
+        <section class="map-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>美食地理分布</h2>
+                    <p>点击地图上的标记，探索各地特色美食</p>
+                </div>
+                
+                <div class="interactive-map">
+                    <div class="china-map" id="chinaMap">
+                        <!-- 四川 -->
+                        <div class="map-region" style="top: 50%; left: 30%;" data-region="sichuan">
+                            <div class="region-dot" onclick="showRegionModal('sichuan')">
+                                <div class="region-info">
+                                    <h4>四川 · 川菜</h4>
+                                    <p>麻辣鲜香，百菜百味</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">麻辣火锅</span>
+                                        <span class="region-dish">麻婆豆腐</span>
+                                        <span class="region-dish">回锅肉</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 广东 -->
+                        <div class="map-region" style="top: 70%; left: 60%;" data-region="guangdong">
+                            <div class="region-dot" onclick="showRegionModal('guangdong')">
+                                <div class="region-info">
+                                    <h4>广东 · 粤菜</h4>
+                                    <p>清淡鲜美，原汁原味</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">白切鸡</span>
+                                        <span class="region-dish">烧鹅</span>
+                                        <span class="region-dish">肠粉</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 山东 -->
+                        <div class="map-region" style="top: 30%; left: 65%;" data-region="shandong">
+                            <div class="region-dot" onclick="showRegionModal('shandong')">
+                                <div class="region-info">
+                                    <h4>山东 · 鲁菜</h4>
+                                    <p>咸鲜醇厚，精于制汤</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">葱烧海参</span>
+                                        <span class="region-dish">糖醋鲤鱼</span>
+                                        <span class="region-dish">九转大肠</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 江苏 -->
+                        <div class="map-region" style="top: 45%; left: 55%;" data-region="jiangsu">
+                            <div class="region-dot" onclick="showRegionModal('jiangsu')">
+                                <div class="region-info">
+                                    <h4>江苏 · 苏菜</h4>
+                                    <p>精致细腻，刀工精湛</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">松鼠鳜鱼</span>
+                                        <span class="region-dish">盐水鸭</span>
+                                        <span class="region-dish">狮子头</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 浙江 -->
+                        <div class="map-region" style="top: 55%; left: 62%;" data-region="zhejiang">
+                            <div class="region-dot" onclick="showRegionModal('zhejiang')">
+                                <div class="region-info">
+                                    <h4>浙江 · 浙菜</h4>
+                                    <p>鲜嫩清爽，制作精细</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">西湖醋鱼</span>
+                                        <span class="region-dish">东坡肉</span>
+                                        <span class="region-dish">龙井虾仁</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 福建 -->
+                        <div class="map-region" style="top: 65%; left: 70%;" data-region="fujian">
+                            <div class="region-dot" onclick="showRegionModal('fujian')">
+                                <div class="region-info">
+                                    <h4>福建 · 闽菜</h4>
+                                    <p>鲜醇和醇，汤路广泛</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">佛跳墙</span>
+                                        <span class="region-dish">荔枝肉</span>
+                                        <span class="region-dish">鸡汤氽海蚌</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 湖南 -->
+                        <div class="map-region" style="top: 60%; left: 45%;" data-region="hunan">
+                            <div class="region-dot" onclick="showRegionModal('hunan')">
+                                <div class="region-info">
+                                    <h4>湖南 · 湘菜</h4>
+                                    <p>香辣酸辣，焦麻香鲜</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">剁椒鱼头</span>
+                                        <span class="region-dish">毛氏红烧肉</span>
+                                        <span class="region-dish">辣椒炒肉</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 安徽 -->
+                        <div class="map-region" style="top: 50%; left: 52%;" data-region="anhui">
+                            <div class="region-dot" onclick="showRegionModal('anhui')">
+                                <div class="region-info">
+                                    <h4>安徽 · 徽菜</h4>
+                                    <p>重油重色，重火功</p>
+                                    <div class="region-dishes">
+                                        <span class="region-dish">臭鳜鱼</span>
+                                        <span class="region-dish">毛豆腐</span>
+                                        <span class="region-dish">胡适一品锅</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 地图图例 -->
+                <div class="map-legend">
+                    <h3>美食地图图例</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--primary-color);"></div>
+                            <span>八大菜系发源地</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--secondary-color);"></div>
+                            <span>特色小吃聚集区</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--accent-color);"></div>
+                            <span>食材原产地</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #8e44ad;"></div>
+                            <span>少数民族美食</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 气候与美食关系 -->
+        <section class="climate-zones">
+            <div class="container">
+                <div class="section-title">
+                    <h2>气候与美食</h2>
+                    <p>不同气候条件塑造了各地的饮食习惯</p>
+                </div>
+                
+                <div class="zone-cards">
+                    <div class="zone-card">
+                        <div class="zone-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h4>潮湿炎热地区</h4>
+                        <p>广东、福建等地，气候潮湿炎热，饮食以清淡、解暑为主，注重汤品和凉菜。</p>
+                    </div>
+                    
+                    <div class="zone-card">
+                        <div class="zone-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <h4>寒冷干燥地区</h4>
+                        <p>东北、西北等地，气候寒冷干燥，饮食以高热量、重口味为主，多炖菜和面食。</p>
+                    </div>
+                    
+                    <div class="zone-card">
+                        <div class="zone-icon">
+                            <i class="fas fa-cloud-rain"></i>
+                        </div>
+                        <h4>多雨湿润地区</h4>
+                        <p>四川、湖南等地，气候多雨湿润，饮食以麻辣为主，帮助驱除体内湿气。</p>
+                    </div>
+                    
+                    <div class="zone-card">
+                        <div class="zone-icon">
+                            <i class="fas fa-water"></i>
+                        </div>
+                        <h4>沿海地区</h4>
+                        <p>沿海各省，海鲜资源丰富，饮食以海鲜为主，讲究原汁原味和鲜度。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 省份特色展示 -->
+        <section class="map-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>省份特色美食</h2>
+                    <p>探索中国各省市的独特美食文化</p>
+                </div>
+                
+                <div class="province-grid">
+                    <!-- 四川 -->
+                    <div class="province-card" onclick="showRegionModal('sichuan')">
+                        <div class="province-img">
+                            <img src="./川菜.jpg" alt="四川美食">
+                        </div>
+                        <div class="province-content">
+                            <h4>四川 · 天府之国</h4>
+                            <div class="province-tags">
+                                <span class="province-tag">麻辣</span>
+                                <span class="province-tag">火锅</span>
+                                <span class="province-tag">小吃</span>
+                            </div>
+                            <p style="font-size: 0.95rem; color: #666;">川菜发源地，以麻辣鲜香著称，火锅文化盛行，小吃种类丰富多样。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 广东 -->
+                    <div class="province-card" onclick="showRegionModal('guangdong')">
+                        <div class="province-img">
+                            <img src="./粤菜.jpg" alt="广东美食">
+                        </div>
+                        <div class="province-content">
+                            <h4>广东 · 岭南风味</h4>
+                            <div class="province-tags">
+                                <span class="province-tag">早茶</span>
+                                <span class="province-tag">烧腊</span>
+                                <span class="province-tag">海鲜</span>
+                            </div>
+                            <p style="font-size: 0.95rem; color: #666;">粤菜发源地，讲究原汁原味，早茶文化独特，烧腊制作精湛。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 江苏 -->
+                    <div class="province-card" onclick="showRegionModal('jiangsu')">
+                        <div class="province-img">
+                            <img src="./苏菜.jpg" alt="江苏美食">
+                        </div>
+                        <div class="province-content">
+                            <h4>江苏 · 江南水乡</h4>
+                            <div class="province-tags">
+                                <span class="province-tag">刀工</span>
+                                <span class="province-tag">精致</span>
+                                <span class="province-tag">河鲜</span>
+                            </div>
+                            <p style="font-size: 0.95rem; color: #666;">苏菜发源地，刀工精细，造型美观，擅长烹制河鲜湖鲜。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 山东 -->
+                    <div class="province-card" onclick="showRegionModal('shandong')">
+                        <div class="province-img">
+                            <img src="./鲁菜.jpg" alt="山东美食">
+                        </div>
+                        <div class="province-content">
+                            <h4>山东 · 孔孟之乡</h4>
+                            <div class="province-tags">
+                                <span class="province-tag">海鲜</span>
+                                <span class="province-tag">面食</span>
+                                <span class="province-tag">咸鲜</span>
+                            </div>
+                            <p style="font-size: 0.95rem; color: #666;">鲁菜发源地，讲究咸鲜纯正，精于制汤，海鲜烹饪技艺高超。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 湖南 -->
+                    <div class="province-card" onclick="showRegionModal('hunan')">
+                        <div class="province-img">
+                            <img src="./湘菜.jpg" alt="湖南美食">
+                        </div>
+                        <div class="province-content">
+                            <h4>湖南 · 辣味王国</h4>
+                            <div class="province-tags">
+                                <span class="province-tag">香辣</span>
+                                <span class="province-tag">酸辣</span>
+                                <span class="province-tag">腊味</span>
+                            </div>
+                            <p style="font-size: 0.95rem; color: #666;">湘菜发源地，以香辣酸辣著称，腊味制作独特，口味浓郁。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 浙江 -->
+                    <div class="province-card" onclick="showRegionModal('zhejiang')">
+                        <div class="province-img">
+                            <img src="./浙菜.jpg" alt="浙江美食">
+                        </div>
+                        <div class="province-content">
+                            <h4>浙江 · 鱼米之乡</h4>
+                            <div class="province-tags">
+                                <span class="province-tag">鲜嫩</span>
+                                <span class="province-tag">清淡</span>
+                                <span class="province-tag">河鲜</span>
+                            </div>
+                            <p style="font-size: 0.95rem; color: #666;">浙菜发源地，注重本味，制作精细，擅长烹制河鲜和时令蔬菜。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 少数民族美食 -->
+        <section class="cuisine-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>少数民族美食</h2>
+                    <p>体验多元文化的饮食特色</p>
+                </div>
+                
+                <div class="cuisine-cards">
+                    <!-- 新疆 -->
+                    <div class="cuisine-card animate opacity-0">
+                        <div class="card-img">
+                            <img src="新疆.jpg" alt="新疆美食">
+                        </div>
+                        <div class="card-content">
+                            <h3>新疆美食</h3>
+                            <div class="card-tags">
+                                <span class="tag">烤羊肉串</span>
+                                <span class="tag">手抓饭</span>
+                                <span class="tag">馕</span>
+                                <span class="tag">维吾尔族</span>
+                            </div>
+                            <p>新疆少数民族美食以羊肉为主，善用孜然、辣椒等香料，风味独特，体现了草原游牧民族的饮食特色。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">烤全羊</span>
+                                <span class="dish-tag">大盘鸡</span>
+                                <span class="dish-tag">拉条子</span>
+                                <span class="dish-tag">奶茶</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 云南 -->
+                    <div class="cuisine-card animate opacity-0 delay-1">
+                        <div class="card-img">
+                            <img src="云南.jpg" alt="云南美食">
+                        </div>
+                        <div class="card-content">
+                            <h3>云南美食</h3>
+                            <div class="card-tags">
+                                <span class="tag">过桥米线</span>
+                                <span class="tag">野生菌</span>
+                                <span class="tag">傣味</span>
+                                <span class="tag">多民族</span>
+                            </div>
+                            <p>云南多民族聚居，美食文化多元，以野生菌、米线、傣味为特色，酸辣可口，风味独特。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">汽锅鸡</span>
+                                <span class="dish-tag">鲜花饼</span>
+                                <span class="dish-tag">普洱茶</span>
+                                <span class="dish-tag">菠萝饭</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 西藏 -->
+                    <div class="cuisine-card animate opacity-0 delay-2">
+                        <div class="card-img">
+                            <img src="西藏.jpg" alt="西藏美食">
+                        </div>
+                        <div class="card-content">
+                            <h3>西藏美食</h3>
+                            <div class="card-tags">
+                                <span class="tag">糌粑</span>
+                                <span class="tag">酥油茶</span>
+                                <span class="tag">牦牛肉</span>
+                                <span class="tag">藏族</span>
+                            </div>
+                            <p>西藏美食适应高原气候，以青稞、牦牛为主料，营养丰富，热量高，具有浓郁的藏族特色。</p>
+                            <div class="card-dishes">
+                                <span class="dish-tag">青稞酒</span>
+                                <span class="dish-tag">藏面</span>
+                                <span class="dish-tag">风干肉</span>
+                                <span class="dish-tag">甜茶</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 地区详情模态框 -->
+    <div id="regionModal" class="region-modal">
+        <div class="region-modal-content" id="regionModalContent">
+            <!-- 内容通过JavaScript动态生成 -->
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>舌尖上的中国</h3>
+                    <p>探索中华美食的千年传承，品味八方风味的独特魅力。</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="cuisines.html">八大菜系</a></li>
+                        <li><a href="videos.html">美食视频</a></li>
+                        <li><a href="map.html">美食地图</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 北京市朝阳区美食文化中心</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> +86 10 1234 5678</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@tasteofchina.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 舌尖上的中国 版权所有 | 设计灵感来源于《舌尖上的中国》纪录片</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="shared.js"></script>
+    <script>
+        // 地区数据
+        // 地区数据 - 完整的8个地区
+const regionData = {
+    sichuan: {
+        name: "四川",
+        cuisine: "川菜",
+        description: "四川位于中国西南地区，气候湿润，物产丰富，素有'天府之国'的美誉。川菜以其麻辣鲜香、百菜百味的特点闻名于世，是中国八大菜系中最具影响力的菜系之一。",
+        characteristics: ["麻辣为主", "口味多变", "善用花椒", "百菜百味"],
+        dishes: [
+            {name: "麻婆豆腐", img: "./麻婆豆腐.jpg"},
+            {name: "回锅肉", img: "./回锅肉.jpg"},
+            {name: "夫妻肺片", img: "./夫妻肺片.jpg"},
+            {name: "水煮鱼", img: "./水煮鱼.jpg"},
+            {name: "担担面", img: "./担担面.jpg"},
+            {name: "毛血旺", img: "./毛血旺.jpg"}
+        ],
+        stats: {
+            dishes: "2000+",
+            restaurants: "50000+",
+            history: "2000年",
+            popularity: "全国第一"
+        }
+    },
+    guangdong: {
+        name: "广东",
+        cuisine: "粤菜",
+        description: "广东位于中国南部沿海，气候温暖湿润，海鲜资源丰富。粤菜追求原汁原味，清淡鲜美，是中国四大菜系之一，以早茶文化和精致的点心闻名。",
+        characteristics: ["清淡为主", "追求本味", "时令食材", "精工细作"],
+        dishes: [
+            {name: "白切鸡", img: "./白切鸡.jpg"},
+            {name: "烧鹅", img: "./烧鹅.jpg"},
+            {name: "蜜汁叉烧", img: "./蜜汁叉烧.jpg"},
+            {name: "肠粉", img: "./肠粉.jpg"},
+            {name: "虾饺", img: "./虾饺.jpg"},
+            {name: "煲仔饭", img: "./煲仔饭.jpg"}
+        ],
+        stats: {
+            dishes: "1500+",
+            restaurants: "40000+",
+            history: "1000年",
+            popularity: "国际知名"
+        }
+    },
+    shandong: {
+        name: "山东",
+        cuisine: "鲁菜",
+        description: "山东位于中国东部沿海，是孔孟之乡，饮食文化历史悠久。鲁菜讲究咸鲜纯正，精于制汤，是中国八大菜系之首，对北方菜系影响深远。",
+        characteristics: ["咸鲜为主", "精于制汤", "善用葱姜", "讲究火候"],
+        dishes: [
+            {name: "葱烧海参", img: "./葱烧海参.jpg"},
+            {name: "糖醋鲤鱼", img: "./糖醋鲤鱼.jpg"},
+            {name: "九转大肠", img: "./九转大肠.jpg"},
+            {name: "德州扒鸡", img: "./德州扒鸡.jpg"},
+            {name: "四喜丸子", img: "./四喜丸子.jpg"},
+            {name: "锅塌豆腐", img: "./锅塌豆腐.jpg"}
+        ],
+        stats: {
+            dishes: "1800+",
+            restaurants: "35000+",
+            history: "2500年",
+            popularity: "宫廷菜系"
+        }
+    },
+    jiangsu: {
+        name: "江苏",
+        cuisine: "苏菜",
+        description: "江苏位于长江三角洲，水网密布，物产丰富。苏菜以刀工精细、造型美观著称，擅长炖、焖、蒸、炒，口味偏甜，体现了江南文化的精致细腻。",
+        characteristics: ["刀工精细", "造型美观", "口味偏甜", "擅长炖焖"],
+        dishes: [
+            {name: "松鼠鳜鱼", img: "./松鼠鳜鱼.jpg"},
+            {name: "盐水鸭", img: "./盐水鸭.jpg"},
+            {name: "狮子头", img: "./狮子头.jpg"},
+            {name: "大煮干丝", img: "./大煮干丝.jpg"},
+            {name: "叫花鸡", img: "./叫花鸡.jpg"},
+            {name: "无锡排骨", img: "./无锡排骨.jpg"}
+        ],
+        stats: {
+            dishes: "1600+",
+            restaurants: "30000+",
+            history: "1500年",
+            popularity: "江南代表"
+        }
+    },
+    // 新增：浙江
+    zhejiang: {
+        name: "浙江",
+        cuisine: "浙菜",
+        description: "浙江位于中国东南沿海，山水秀丽，物产丰富。浙菜注重本味，制作精细，菜品形态精巧，口感鲜嫩。",
+        characteristics: ["鲜嫩为主", "口味清淡", "制作精细", "时令新鲜"],
+        dishes: [
+            {name: "西湖醋鱼", img: "./西湖醋鱼.jpg"},
+            {name: "东坡肉", img: "./东坡肉.jpg"},
+            {name: "龙井虾仁", img: "./龙井虾仁.jpg"},
+            {name: "宋嫂鱼羹", img: "./宋嫂鱼羹.jpg"},
+            {name: "叫化童鸡", img: "./叫化童鸡.jpg"},
+            {name: "干炸响铃", img: "./干炸响铃.jpg"}
+        ],
+        stats: {
+            dishes: "1400+",
+            restaurants: "28000+",
+            history: "1200年",
+            popularity: "江南精致"
+        }
+    },
+    // 新增：福建
+    fujian: {
+        name: "福建",
+        cuisine: "闽菜",
+        description: "福建位于中国东南沿海，山海资源丰富。闽菜以烹制山珍海味而著称，汤路广泛，清鲜、和醇、荤香、不腻。",
+        characteristics: ["汤菜为主", "善用红糟", "口味清淡", "海味丰富"],
+        dishes: [
+            {name: "佛跳墙", img: "./佛跳墙.jpg"},
+            {name: "荔枝肉", img: "./荔枝肉.jpg"},
+            {name: "鸡汤氽海蚌", img: "./鸡汤氽海蚌.jpg"},
+            {name: "淡糟香螺片", img: "./淡糟香螺片.jpg"},
+            {name: "醉排骨", img: "./醉排骨.jpg"},
+            {name: "南煎肝", img: "./南煎肝.jpg"}
+        ],
+        stats: {
+            dishes: "1300+",
+            restaurants: "25000+",
+            history: "1100年",
+            popularity: "海鲜之都"
+        }
+    },
+    // 新增：湖南
+    hunan: {
+        name: "湖南",
+        cuisine: "湘菜",
+        description: "湖南位于中国中部，气候湿润。湘菜制作精细，用料广泛，口味多变，注重香辣、酸辣、焦麻、香鲜。",
+        characteristics: ["香辣为主", "酸辣可口", "注重刀工", "油重色浓"],
+        dishes: [
+            {name: "剁椒鱼头", img: "./剁椒鱼头.jpg"},
+            {name: "毛氏红烧肉", img: "./毛氏红烧肉.jpg"},
+            {name: "腊味合蒸", img: "./腊味合蒸.jpg"},
+            {name: "永州血鸭", img: "./永州血鸭.jpg"},
+            {name: "东安子鸡", img: "./东安子鸡.jpg"},
+            {name: "辣椒炒肉", img: "./辣椒炒肉.jpg"}
+        ],
+        stats: {
+            dishes: "1500+",
+            restaurants: "32000+",
+            history: "1300年",
+            popularity: "辣味王国"
+        }
+    },
+    // 新增：安徽
+    anhui: {
+        name: "安徽",
+        cuisine: "徽菜",
+        description: "安徽地处华东，山地丘陵为主。徽菜擅长烧、炖、蒸，而爆、炒菜少，重油、重色、重火功，以烹制山珍野味著称。",
+        characteristics: ["重油重色", "善于烧炖", "山珍野味", "讲究火功"],
+        dishes: [
+            {name: "臭鳜鱼", img: "./臭鳜鱼.jpg"},
+            {name: "毛豆腐", img: "./毛豆腐.jpg"},
+            {name: "胡适一品锅", img: "./胡适一品锅.jpg"},
+            {name: "火腿炖甲鱼", img: "./火腿炖甲鱼.jpg"},
+            {name: "黄山炖鸽", img: "./黄山炖鸽.jpg"},
+            {name: "问政山笋", img: "./问政山笋.jpg"}
+        ],
+        stats: {
+            dishes: "1200+",
+            restaurants: "22000+",
+            history: "1000年",
+            popularity: "山珍代表"
+        }
+    }
+};
+        
+        // 显示地区详情模态框
+        function showRegionModal(regionId) {
+            const region = regionData[regionId];
+            if (!region) return;
+            
+            const modal = document.getElementById('regionModal');
+            const content = document.getElementById('regionModalContent');
+            
+            // 生成模态框内容
+            content.innerHTML = `
+                <div class="modal-header">
+                    <h2 style="color: white; margin-bottom: 10px;">${region.name} · ${region.cuisine}</h2>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem;">${region.description}</p>
+                    <div class="close-modal" onclick="closeRegionModal()">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <h3>菜系特点</h3>
+                    <div class="card-tags" style="margin: 1rem 0;">
+                        ${region.characteristics.map(char => `<span class="tag">${char}</span>`).join('')}
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">代表菜品</h3>
+                    <div class="modal-dishes">
+                        ${region.dishes.map(dish => `
+                            <div class="modal-dish-item" onclick="playVideo('${dish.name}制作', 'videos/${regionId}.mp4')">
+                                <div class="modal-dish-img">
+                                    <img src="${dish.img}" alt="${dish.name}" onerror="this.src='https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                                </div>
+                                <p style="font-weight: 600; margin: 0;">${dish.name}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="region-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="stat-value">${region.stats.dishes}</div>
+                            <div class="stat-label">菜品数量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <div class="stat-value">${region.stats.restaurants}</div>
+                            <div class="stat-label">餐厅数量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="stat-value">${region.stats.history}</div>
+                            <div class="stat-label">历史传承</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-value">${region.stats.popularity}</div>
+                            <div class="stat-label">受欢迎程度</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="window.location.href='cuisines.html#${regionId}'">
+                            <i class="fas fa-book-open"></i> 查看详细菜系介绍
+                        </button>
+                        <button class="btn" onclick="window.location.href='videos.html'" style="margin-left: 1rem; background: linear-gradient(135deg, var(--accent-color), var(--accent-light));">
+                            <i class="fas fa-video"></i> 观看制作视频
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+        
+        // 关闭地区详情模态框
+        function closeRegionModal() {
+            document.getElementById('regionModal').style.display = 'none';
+        }
+        
+        // 点击模态框外部关闭
+        document.getElementById('regionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRegionModal();
+            }
+        });
+        
+        // 地图交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const regions = document.querySelectorAll('.map-region');
+            
+            regions.forEach(region => {
+                // 鼠标悬停效果
+                region.addEventListener('mouseenter', function() {
+                    const dot = this.querySelector('.region-dot');
+                    if (dot) {
+                        dot.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                        dot.style.backgroundColor = 'var(--primary-light)';
+                    }
+                });
+                
+                region.addEventListener('mouseleave', function() {
+                    const dot = this.querySelector('.region-dot');
+                    if (dot) {
+                        dot.style.transform = 'translate(-50%, -50%) scale(1)';
+                        dot.style.backgroundColor = 'var(--primary-color)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八大菜系 | 舌尖上的中国</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* 菜系详情页面特有样式 */
+        .cuisine-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./川菜.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+        
+        .cuisine-hero-content h1 {
+            font-size: 4rem;
+            font-family: 'Ma Shan Zheng', cursive;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .cuisine-nav {
+            background-color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+        }
+        
+        .cuisine-nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .cuisine-nav-item {
+            padding: 8px 20px;
+            background-color: #f5f5f5;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .cuisine-nav-item:hover,
+        .cuisine-nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .cuisine-detail-section {
+            margin-bottom: 4rem;
+            padding-top: 4rem;
+            scroll-margin-top: 180px;
+        }
+        
+        .cuisine-detail-section h2 {
+            border-left: 5px solid var(--primary-color);
+            padding-left: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .featured-dish {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+        
+        .featured-dish-img {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .featured-dish-img img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+        
+        .featured-dish-img:hover img {
+            transform: scale(1.05);
+        }
+        
+        .featured-dish-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .dish-recipe {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .recipe-steps {
+            counter-reset: step-counter;
+            margin-top: 1.5rem;
+        }
+        
+        .recipe-step {
+            display: flex;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .recipe-step-number {
+            flex-shrink: 0;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .cuisine-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .cuisine-gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .cuisine-gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .cuisine-gallery-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .cuisine-gallery-item p {
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>舌尖上的中国</h1>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cuisines.html" class="nav-link active">八大菜系</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">美食视频</a>
+                </li>
+                <li class="nav-item">
+                    <a href="map.html" class="nav-link">美食地图</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+                
+                <!-- 搜索框 -->
+                <li class="nav-item search-container">
+                    <input type="text" class="search-box" placeholder="搜索菜系或菜品...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果动态生成 -->
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 菜系页面内容 -->
+    <main id="main-content">
+        <!-- 页面英雄区 -->
+        <section class="cuisine-hero">
+            <div class="cuisine-hero-content">
+                <h1>中国八大菜系</h1>
+                <p style="font-size: 1.5rem;">品味八方风味，感受千年饮食文化</p>
+            </div>
+        </section>
+        
+        <!-- 菜系导航 -->
+        <div class="cuisine-nav">
+            <div class="container">
+                <div class="cuisine-nav-container">
+                    <a href="#sichuan" class="cuisine-nav-item">川菜</a>
+                    <a href="#cantonese" class="cuisine-nav-item">粤菜</a>
+                    <a href="#shandong" class="cuisine-nav-item">鲁菜</a>
+                    <a href="#jiangsu" class="cuisine-nav-item">苏菜</a>
+                    <a href="#zhejiang" class="cuisine-nav-item">浙菜</a>
+                    <a href="#fujian" class="cuisine-nav-item">闽菜</a>
+                    <a href="#hunan" class="cuisine-nav-item">湘菜</a>
+                    <a href="#anhui" class="cuisine-nav-item">徽菜</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 菜系详情区域 -->
+        <div class="container">
+            <!-- 川菜 -->
+            <section id="sichuan" class="cuisine-detail-section">
+                <h2>川菜 - 麻辣鲜香，百菜百味</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">麻辣</span>
+                    <span class="tag">鲜香</span>
+                    <span class="tag">百菜百味</span>
+                    <span class="tag">四川</span>
+                </div>
+                
+                <p>川菜是中国八大菜系之一，起源于四川地区，以麻辣、鱼香、怪味等独特口味著称。川菜讲究"一菜一格，百菜百味"，在中国烹饪史上占有重要地位。</p>
+                <p>川菜的特点是口味多样，清鲜醇浓并重，以善用麻辣著称，并以其别具一格的烹调方法和浓郁的地方风味，融会了东南西北各方的特点，博采众家之长，善于吸收，善于创新，享誉中外。</p>
+                
+                <!-- 代表菜品 -->
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./麻婆豆腐.jpg" alt="麻婆豆腐">
+                            <p>麻婆豆腐</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./宫保鸡丁.jpg" alt="宫保鸡丁">
+                            <p>宫保鸡丁</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./回锅肉.jpg" alt="回锅肉">
+                            <p>回锅肉</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./水煮鱼.jpg" alt="水煮鱼">
+                            <p>水煮鱼</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 特色菜品展示 -->
+                <div class="featured-dish">
+                    <div class="featured-dish-img">
+                        <img src="./麻婆豆腐.jpg" alt="麻婆豆腐">
+                    </div>
+                    <div class="featured-dish-info">
+                        <h3>经典菜品：麻婆豆腐</h3>
+                        <p>麻婆豆腐是川菜的代表作之一，以麻辣鲜香烫酥嫩为特点，豆腐嫩滑，牛肉末酥香，花椒麻辣，回味无穷。</p>
+                        
+                        <div class="dish-recipe">
+                            <h4>制作方法</h4>
+                            <div class="recipe-steps">
+                                <div class="recipe-step">
+                                    <div class="recipe-step-number">1</div>
+                                    <div class="recipe-step-content">
+                                        <p>豆腐切块，放入盐水中焯水1分钟，捞出沥干</p>
+                                    </div>
+                                </div>
+                                <div class="recipe-step">
+                                    <div class="recipe-step-number">2</div>
+                                    <div class="recipe-step-content">
+                                        <p>热锅凉油，下牛肉末炒至酥香，加入豆瓣酱炒出红油</p>
+                                    </div>
+                                </div>
+                                <div class="recipe-step">
+                                    <div class="recipe-step-number">3</div>
+                                    <div class="recipe-step-content">
+                                        <p>加入姜蒜末炒香，倒入适量高汤或清水</p>
+                                    </div>
+                                </div>
+                                <div class="recipe-step">
+                                    <div class="recipe-step-number">4</div>
+                                    <div class="recipe-step-content">
+                                        <p>放入豆腐块，小火煮5分钟让豆腐入味</p>
+                                    </div>
+                                </div>
+                                <div class="recipe-step">
+                                    <div class="recipe-step-number">5</div>
+                                    <div class="recipe-step-content">
+                                        <p>分两次勾芡，撒上花椒粉和蒜苗末即可</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn" onclick="playVideo('麻婆豆腐制作', 'videos/sichuan.mp4')" style="margin-top: 1.5rem; padding: 10px 25px;">
+                                <i class="fas fa-play-circle"></i> 观看制作视频
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 粤菜 -->
+            <section id="cantonese" class="cuisine-detail-section">
+                <h2>粤菜 - 清淡鲜美，原汁原味</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">清淡</span>
+                    <span class="tag">鲜美</span>
+                    <span class="tag">原汁原味</span>
+                    <span class="tag">广东</span>
+                </div>
+                
+                <p>粤菜即广东菜，是中国传统四大菜系之一，发源于岭南。粤菜由广州菜、潮州菜、东江菜三种地方风味组成，注重原料新鲜，追求原汁原味。</p>
+                <p>粤菜特点是清而不淡，鲜而不俗，嫩而不生，油而不腻，讲究火候，尤重镬气。夏秋力求清淡，冬春偏重浓郁，擅长小炒，要求掌握火候和油温恰到好处。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./白切鸡.jpg" alt="白切鸡">
+                            <p>白切鸡</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./烧鹅.jpg" alt="烧鹅">
+                            <p>烧鹅</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./蜜汁叉烧.jpg" alt="蜜汁叉烧">
+                            <p>蜜汁叉烧</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./肠粉.jpg" alt="肠粉">
+                            <p>肠粉</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 粤菜特色菜品展示 -->
+                <div class="featured-dish">
+                    <div class="featured-dish-img">
+                        <img src="./白切鸡.jpg" alt="白切鸡">
+                    </div>
+                    <div class="featured-dish-info">
+                        <h3>经典菜品：白切鸡</h3>
+                        <p>白切鸡是粤菜的代表作，以皮爽肉滑、清淡鲜美著称，最大程度保留了鸡肉的原汁原味。</p>
+                        
+                        <div class="dish-recipe">
+                            <h4>制作要点</h4>
+                            <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                                <li>选用三黄鸡，肉质鲜嫩</li>
+                                <li>煮鸡时要用"三提三放"的方法</li>
+                                <li>火候要控制在微沸状态</li>
+                                <li>煮好后要立即放入冰水</li>
+                                <li>搭配姜葱蘸料食用</li>
+                            </ul>
+                            
+                            <button class="btn" onclick="playVideo('白切鸡制作', 'videos/baizhanji.mp4')" style="margin-top: 1.5rem; padding: 10px 25px;">
+                                <i class="fas fa-play-circle"></i> 观看制作视频
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 鲁菜 -->
+            <section id="shandong" class="cuisine-detail-section">
+                <h2>鲁菜 - 咸鲜醇厚，精于制汤</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">咸鲜</span>
+                    <span class="tag">醇厚</span>
+                    <span class="tag">精于制汤</span>
+                    <span class="tag">山东</span>
+                </div>
+                
+                <p>鲁菜是八大菜系之首，起源于山东，历史最悠久、技法最丰富。鲁菜讲究原料质地优良，以盐提鲜，以汤壮鲜，调味讲求咸鲜纯正，突出本味。</p>
+                <p>鲁菜以汤为百鲜之源，讲究"清汤"、"奶汤"的调制，清浊分明，取其清鲜。对于海珍品和小海味的烹制堪称一绝，代表菜品有葱烧海参、糖醋鲤鱼、九转大肠等。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./葱烧海参.jpg" alt="葱烧海参">
+                            <p>葱烧海参</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./糖醋鲤鱼.jpg" alt="糖醋鲤鱼">
+                            <p>糖醋鲤鱼</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./九转大肠.jpg" alt="九转大肠">
+                            <p>九转大肠</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./四喜丸子.jpg" alt="四喜丸子">
+                            <p>四喜丸子</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 苏菜 -->
+            <section id="jiangsu" class="cuisine-detail-section">
+                <h2>苏菜 - 精致细腻，刀工精湛</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">精致</span>
+                    <span class="tag">鲜美</span>
+                    <span class="tag">刀工精湛</span>
+                    <span class="tag">江苏</span>
+                </div>
+                
+                <p>苏菜即江苏菜，起源于南北朝时期，以刀工精细、造型美观著称。苏菜注重本味，讲究火候，擅长炖、焖、蒸、炒，口味偏甜，造型精美。</p>
+                <p>苏菜由淮扬菜、金陵菜、苏锡菜、徐海菜等地方菜组成，其中淮扬菜刀工最精细，一块2厘米厚的方干，能批成30片的薄片，切丝如发。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./松鼠鳜鱼.jpg" alt="松鼠鳜鱼">
+                            <p>松鼠鳜鱼</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./盐水鸭.jpg" alt="盐水鸭">
+                            <p>盐水鸭</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./狮子头.jpg" alt="狮子头">
+                            <p>狮子头</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./大煮干丝.jpg" alt="大煮干丝">
+                            <p>大煮干丝</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 浙菜 -->
+            <section id="zhejiang" class="cuisine-detail-section">
+                <h2>浙菜 - 鲜嫩清爽，制作精细</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">鲜嫩</span>
+                    <span class="tag">清爽</span>
+                    <span class="tag">制作精细</span>
+                    <span class="tag">浙江</span>
+                </div>
+                
+                <p>浙菜即浙江菜，由杭州、宁波、绍兴和温州为代表的四个地方流派组成。浙菜选料讲究，烹饪独到，注重本味，制作精细，菜品形态精巧，口感鲜嫩。</p>
+                <p>浙菜以烹调技法丰富多彩闻名，其中以炒、炸、烩、熘、蒸、烧6类最为擅长，口味注重清鲜脆嫩，保持原料的本色和真味。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./西湖醋鱼.jpg" alt="西湖醋鱼">
+                            <p>西湖醋鱼</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./东坡肉.jpg" alt="东坡肉">
+                            <p>东坡肉</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./龙井虾仁.jpg" alt="龙井虾仁">
+                            <p>龙井虾仁</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./宋嫂鱼羹.jpg" alt="宋嫂鱼羹">
+                            <p>宋嫂鱼羹</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 闽菜 -->
+            <section id="fujian" class="cuisine-detail-section">
+                <h2>闽菜 - 鲜醇和醇，汤路广泛</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">鲜醇</span>
+                    <span class="tag">和醇</span>
+                    <span class="tag">荤香不腻</span>
+                    <span class="tag">福建</span>
+                </div>
+                
+                <p>闽菜以烹制山珍海味而著称，在色香味形俱佳的基础上，尤以"香"、"味"见长，其清鲜、和醇、荤香、不腻的风格特色，以及汤路广泛的特点。</p>
+                <p>闽菜以福州菜为代表，以烹制山珍海味著称，在色、香、味、形兼顾的基础上，尤以香、味见长。其清新、和醇、荤香、不腻的风味特色，在中国饮食文化中独树一帜。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./佛跳墙.jpg" alt="佛跳墙">
+                            <p>佛跳墙</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./荔枝肉.jpg" alt="荔枝肉">
+                            <p>荔枝肉</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./鸡汤氽海蚌.jpg" alt="鸡汤氽海蚌">
+                            <p>鸡汤氽海蚌</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./醉排骨.jpg" alt="醉排骨">
+                            <p>醉排骨</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 湘菜 -->
+            <section id="hunan" class="cuisine-detail-section">
+                <h2>湘菜 - 香辣酸辣，焦麻香鲜</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">香辣</span>
+                    <span class="tag">酸辣</span>
+                    <span class="tag">焦麻香鲜</span>
+                    <span class="tag">湖南</span>
+                </div>
+                
+                <p>湘菜即湖南菜，以湘江流域、洞庭湖区和湘西山区三种地方风味为主。湘菜制作精细，用料广泛，口味多变，品种繁多，注重香辣、酸辣、焦麻、香鲜。</p>
+                <p>湘菜制作精细，用料广泛，品种繁多，其特点是油重色浓，讲求实惠，注重鲜香、酸辣、软嫩，尤以煨菜和腊菜著称。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./剁椒鱼头.jpg" alt="剁椒鱼头">
+                            <p>剁椒鱼头</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./毛氏红烧肉.jpg" alt="毛氏红烧肉">
+                            <p>毛氏红烧肉</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./腊味合蒸.jpg" alt="腊味合蒸">
+                            <p>腊味合蒸</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./辣椒炒肉.jpg" alt="辣椒炒肉">
+                            <p>辣椒炒肉</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 徽菜 -->
+            <section id="anhui" class="cuisine-detail-section">
+                <h2>徽菜 - 重油重色，重火功</h2>
+                
+                <div class="card-tags" style="margin-bottom: 2rem;">
+                    <span class="tag">重油</span>
+                    <span class="tag">重色</span>
+                    <span class="tag">重火功</span>
+                    <span class="tag">安徽</span>
+                </div>
+                
+                <p>徽菜起源于南宋时期的徽州府，擅长烧、炖、蒸，而爆、炒菜少，重油、重色、重火功。由于徽州地处山区，徽菜以烹制山珍野味著称。</p>
+                <p>徽菜在烹调方法上擅长烧、炖、蒸，而爆、炒菜少，重油、重色，重火功。主要名菜有"火腿炖甲鱼"、"红烧果子狸"、"腌鲜鳜鱼"、"黄山炖鸽"等上百种。</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>代表菜品</h3>
+                    <div class="cuisine-gallery">
+                        <div class="cuisine-gallery-item">
+                            <img src="./臭鳜鱼.jpg" alt="臭鳜鱼">
+                            <p>臭鳜鱼</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./毛豆腐.jpg" alt="毛豆腐">
+                            <p>毛豆腐</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./胡适一品锅.jpg" alt="胡适一品锅">
+                            <p>胡适一品锅</p>
+                        </div>
+                        <div class="cuisine-gallery-item">
+                            <img src="./问政山笋.jpg" alt="问政山笋">
+                            <p>问政山笋</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 对比表格 -->
+            <section class="cuisine-detail-section">
+                <h2>八大菜系特点对比</h2>
+                
+                <div style="overflow-x: auto; margin-top: 2rem;">
+                    <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow);">
+                        <thead>
+                            <tr style="background-color: var(--primary-color); color: white;">
+                                <th style="padding: 15px; text-align: left;">菜系</th>
+                                <th style="padding: 15px; text-align: left;">口味特点</th>
+                                <th style="padding: 15px; text-align: left;">烹饪技法</th>
+                                <th style="padding: 15px; text-align: left;">代表地区</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; font-weight: bold;">川菜</td>
+                                <td style="padding: 15px;">麻辣鲜香，百菜百味</td>
+                                <td style="padding: 15px;">炒、煎、干烧、炸、熏、泡、炖</td>
+                                <td style="padding: 15px;">四川、重庆</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; font-weight: bold;">粤菜</td>
+                                <td style="padding: 15px;">清淡鲜美，原汁原味</td>
+                                <td style="padding: 15px;">蒸、炒、煎、焗、炖、煮</td>
+                                <td style="padding: 15px;">广东、香港、澳门</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px; font-weight: bold;">鲁菜</td>
+                                <td style="padding: 15px;">咸鲜醇厚，精于制汤</td>
+                                <td style="padding: 15px;">爆、炒、烧、扒、炸、烤</td>
+                                <td style="padding: 15px;">山东</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; font-weight: bold;">苏菜</td>
+                                <td style="padding: 15px;">精致细腻，刀工精湛</td>
+                                <td style="padding: 15px;">炖、焖、煨、焐、蒸、炒</td>
+                                <td style="padding: 15px;">江苏</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- 视频播放模态框 -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <div class="close-video" onclick="closeVideo()">
+                <i class="fas fa-times"></i>
+            </div>
+            
+            <div class="video-container"></div>
+            
+            <div style="color: white; padding: 20px; text-align: center;">
+                <h3 id="videoTitle"></h3>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>舌尖上的中国</h3>
+                    <p>探索中华美食的千年传承，品味八方风味的独特魅力。</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="cuisines.html">八大菜系</a></li>
+                        <li><a href="videos.html">美食视频</a></li>
+                        <li><a href="map.html">美食地图</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 北京市朝阳区美食文化中心</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> +86 10 1234 5678</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@tasteofchina.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 舌尖上的中国 版权所有 | 设计灵感来源于《舌尖上的中国》纪录片</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="shared.js"></script>
+    <script>
+        // 菜系页面特有功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏激活
+            const navItems = document.querySelectorAll('.cuisine-nav-item');
+            const sections = document.querySelectorAll('.cuisine-detail-section');
+            
+            // 监听滚动，高亮当前菜系
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 200;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (window.scrollY >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+            
+            // 平滑滚动
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 180,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 页面加载时滚动到对应锚点
+            const hash = window.location.hash;
+            if (hash) {
+                setTimeout(() => {
+                    const targetElement = document.querySelector(hash);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 180,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>

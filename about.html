@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 | 舌尖上的中国</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* 关于页面特有样式 */
+        .about-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+        
+        .about-hero-content h1 {
+            font-size: 4rem;
+            font-family: 'Ma Shan Zheng', cursive;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mission-statement {
+            background-color: white;
+            border-radius: 15px;
+            padding: 4rem;
+            box-shadow: var(--shadow);
+            margin: 3rem auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mission-statement:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
+        }
+        
+        .mission-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .value-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .team-section {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .member-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-member:hover .member-img img {
+            transform: scale(1.05);
+        }
+        
+        .member-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .member-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        
+        .member-role {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .member-social a {
+            width: 35px;
+            height: 35px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: var(--transition);
+        }
+        
+        .member-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .timeline-section {
+            position: relative;
+            padding: 4rem 0;
+        }
+        
+        .timeline-section:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--primary-light);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .contact-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 4rem;
+            box-shadow: var(--shadow);
+            margin: 3rem 0;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .contact-details h4 {
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .faq-section {
+            margin-top: 4rem;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 2rem auto 0;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .faq-question:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-question {
+            background-color: #f9f9f9;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        .partners-section {
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            padding: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .partner-logo {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .partner-logo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .partner-logo img {
+            max-width: 100%;
+            max-height: 60px;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+        
+        .partner-logo:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .mission-statement,
+            .contact-section {
+                padding: 2rem;
+            }
+            
+            .timeline-section:before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: row !important;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .timeline-content {
+                margin-left: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>舌尖上的中国</h1>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cuisines.html" class="nav-link">八大菜系</a>
+                </li>
+                <li class="nav-item">
+                    <a href="videos.html" class="nav-link">美食视频</a>
+                </li>
+                <li class="nav-item">
+                    <a href="map.html" class="nav-link">美食地图</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link active">关于我们</a>
+                </li>
+                
+                <!-- 搜索框 -->
+                <li class="nav-item search-container">
+                    <input type="text" class="search-box" placeholder="搜索...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果动态生成 -->
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 关于页面内容 -->
+    <main id="main-content">
+        <!-- 页面英雄区 -->
+        <section class="about-hero">
+            <div class="about-hero-content">
+                <h1>关于我们</h1>
+                <p style="font-size: 1.5rem;">传播中国美食文化，连接世界味蕾</p>
+            </div>
+        </section>
+        
+        <!-- 使命宣言 -->
+        <section class="mission-section">
+            <div class="container">
+                <div class="mission-statement">
+                    <div class="mission-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h2>我们的使命</h2>
+                    <p style="font-size: 1.2rem; line-height: 1.8; max-width: 800px; margin: 0 auto;">
+                        "舌尖上的中国"是一个致力于传播中国美食文化的数字平台。我们通过纪录片、文章、食谱和互动体验，向世界展示中国丰富的饮食传统和烹饪技艺。我们的使命是让更多人了解中国美食背后的文化故事，感受食物如何连接人与人、人与自然，以及传统与现代。
+                    </p>
+                </div>
+                
+                <!-- 核心价值观 -->
+                <div class="section-title">
+                    <h2>核心价值观</h2>
+                    <p>我们坚持的理念和原则</p>
+                </div>
+                
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3>传承文化</h3>
+                        <p>保护和传承中国千年饮食文化，让传统烹饪技艺得以延续和发展。</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>连接社区</h3>
+                        <p>建立美食爱好者社区，分享烹饪经验，交流美食心得，连接味蕾与心灵。</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>创新融合</h3>
+                        <p>在尊重传统的基础上，探索创新烹饪方法，融合现代饮食理念。</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-globe-asia"></i>
+                        </div>
+                        <h3>走向世界</h3>
+                        <p>向世界推广中国美食文化，让更多人了解和喜爱中华饮食。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 发展历程 -->
+        <section class="timeline-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>发展历程</h2>
+                    <p>从创始至今的重要时刻</p>
+                </div>
+                
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2010年</div>
+                            <h3>项目启动</h3>
+                            <p>"舌尖上的中国"项目正式启动，旨在通过数字媒体记录和传播中国各地美食文化。</p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2012年</div>
+                            <h3>纪录片上线</h3>
+                            <p>首部《舌尖上的中国》纪录片在中央电视台播出，迅速引起全国观众的关注和热议。</p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2015年</div>
+                            <h3>网站上线</h3>
+                            <p>官方网站正式上线，提供八大菜系介绍、食谱分享、美食地图等在线服务。</p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2018年</div>
+                            <h3>国际版发布</h3>
+                            <p>推出英文、日文、韩文等多语言版本，开始向国际市场推广中国美食文化。</p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2021年</div>
+                            <h3>移动应用发布</h3>
+                            <p>推出手机应用程序，提供个性化推荐、在线课程、社区互动等功能。</p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2023年</div>
+                            <h3>全新改版</h3>
+                            <p>网站全面改版升级，增加互动地图、视频课程、虚拟厨房体验等创新功能。</p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 团队介绍 -->
+        <section class="team-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>我们的团队</h2>
+                    <p>专业、热情、创新的美食文化传播者</p>
+                </div>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="李明.jpg" alt="李明">
+                        </div>
+                        <div class="member-info">
+                            <h4>李明</h4>
+                            <div class="member-role">创始人 & 总编辑</div>
+                            <p style="font-size: 0.9rem; color: #666;">资深美食记者，著有《中国饮食文化史》等多部著作。</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-weibo"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="22.jpg" alt="王芳">
+                        </div>
+                        <div class="member-info">
+                            <h4>王芳</h4>
+                            <div class="member-role">内容总监</div>
+                            <p style="font-size: 0.9rem; color: #666;">美食作家，擅长将复杂的烹饪技巧转化为易懂的教学内容。</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-weibo"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="张伟">
+                        </div>
+                        <div class="member-info">
+                            <h4>张伟</h4>
+                            <div class="member-role">技术总监</div>
+                            <p style="font-size: 0.9rem; color: #666;">资深前端工程师，负责网站开发和技术创新。</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="陈静">
+                        </div>
+                        <div class="member-info">
+                            <h4>陈静</h4>
+                            <div class="member-role">视频制作总监</div>
+                            <p style="font-size: 0.9rem; color: #666;">纪录片导演，曾参与多部美食纪录片的拍摄制作。</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-youtube"></i></a>
+                                <a href="#"><i class="fab fa-vimeo"></i></a>
+                                <a href="#"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 联系方式 -->
+        <section class="contact-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>联系我们</h2>
+                    <p>欢迎与我们交流合作</p>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>办公地址</h4>
+                                <p>北京市朝阳区美食文化中心大厦15层</p>
+                                <p style="color: #666; font-size: 0.9rem;">邮编：100000</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>联系电话</h4>
+                                <p>+86 10 1234 5678</p>
+                                <p style="color: #666; font-size: 0.9rem;">工作日 9:00-18:00</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>电子邮箱</h4>
+                                <p>info@tasteofchina.com</p>
+                                <p style="color: #666; font-size: 0.9rem;">合作：cooperation@tasteofchina.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>工作时间</h4>
+                                <p>周一至周五：9:00-18:00</p>
+                                <p style="color: #666; font-size: 0.9rem;">周末及节假日休息</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <h3>发送消息</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">姓名 *</label>
+                                <input type="text" id="name" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">邮箱 *</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">主题</label>
+                                <input type="text" id="subject" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">消息内容 *</label>
+                                <textarea id="message" class="form-control" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn" style="align-self: flex-start;">
+                                <i class="fas fa-paper-plane"></i> 发送消息
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 常见问题 -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>常见问题</h2>
+                    <p>您可能关心的问题解答</p>
+                </div>
+                
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>如何获取食谱？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>您可以在我们的网站"八大菜系"页面中找到详细的食谱，每个菜系都有多道经典菜品的制作方法。此外，我们也在"美食视频"页面提供视频教程。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>是否可以投稿分享自己的食谱？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>是的！我们欢迎美食爱好者投稿分享自己的食谱和烹饪心得。请将您的稿件发送至投稿邮箱：contribute@tasteofchina.com，我们的编辑团队会认真审阅并与您联系。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>网站内容是否免费？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>是的，网站所有内容都免费提供给用户。我们的目标是传播中国美食文化，让更多人能够轻松学习和了解中华饮食。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>如何与你们合作？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>我们欢迎各类合作，包括内容合作、品牌合作、活动合作等。请发送合作意向至cooperation@tasteofchina.com，我们会尽快与您联系。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>网站多久更新一次？</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>我们每周都会更新内容，包括新的食谱、美食文章、视频教程等。您可以关注我们的社交媒体账号获取最新更新通知。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 合作伙伴 -->
+        <section class="partners-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>合作伙伴</h2>
+                    <p>感谢以下机构的大力支持</p>
+                </div>
+                
+                <div class="partners-grid">
+                    <div class="partner-logo">
+                        <img src="中国烹饪协会.jpg" alt="中国烹饪协会">
+                    </div>
+                    
+                    <div class="partner-logo">
+                        <img src="美食文化基金会.jpg" alt="美食文化基金会">
+                    </div>
+                    
+                    <div class="partner-logo">
+                        <img src="央视纪录片中心.jpg" alt="央视纪录片中心">
+                    </div>
+                    
+                    <div class="partner-logo">
+                        <img src="旅游文化部.jpg" alt="旅游文化部">
+                    </div>
+                    
+                    <div class="partner-logo">
+                        <img src="农业大学.jpg" alt="农业大学">
+                    </div>
+                    
+                    <div class="partner-logo">
+                        <img src="国际美食协会.jpg" alt="国际美食协会">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 加入我们 -->
+        <section class="cuisine-section" style="background-color: var(--bg-dark); color: var(--text-light);">
+            <div class="container">
+                <div class="section-title">
+                    <h2 style="color: var(--text-light);">加入我们</h2>
+                    <p style="color: rgba(255,255,255,0.8);">一起传播中国美食文化</p>
+                </div>
+                
+                <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                        如果您对美食文化传播充满热情，拥有相关专业技能，欢迎加入我们的团队！
+                    </p>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="mailto:career@tasteofchina.com" class="btn" style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));">
+                            <i class="fas fa-briefcase"></i> 查看职位
+                        </a>
+                        <a href="mailto:intern@tasteofchina.com" class="btn" style="background: linear-gradient(135deg, var(--accent-color), var(--accent-light));">
+                            <i class="fas fa-graduation-cap"></i> 实习机会
+                        </a>
+                        <a href="mailto:volunteer@tasteofchina.com" class="btn" style="background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light)); color: var(--text-dark);">
+                            <i class="fas fa-hands-helping"></i> 志愿者
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>舌尖上的中国</h3>
+                    <p>探索中华美食的千年传承，品味八方风味的独特魅力。</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="cuisines.html">八大菜系</a></li>
+                        <li><a href="videos.html">美食视频</a></li>
+                        <li><a href="map.html">美食地图</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 北京市朝阳区美食文化中心</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> +86 10 1234 5678</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@tasteofchina.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 舌尖上的中国 版权所有 | 设计灵感来源于《舌尖上的中国》纪录片</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="shared.js"></script>
+    <script>
+        // 关于页面特有功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ功能
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    // 关闭其他打开的FAQ
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // 切换当前FAQ
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // 表单提交
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // 获取表单数据
+                    const formData = {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        subject: document.getElementById('subject').value,
+                        message: document.getElementById('message').value
+                    };
+                    
+                    // 这里可以添加表单提交逻辑，比如发送到服务器
+                    console.log('表单提交:', formData);
+                    
+                    // 显示成功消息
+                    alert('感谢您的留言！我们会尽快与您联系。');
+                    
+                    // 重置表单
+                    contactForm.reset();
+                });
+            }
+            
+            // 团队成员卡片悬停效果
+            const teamMembers = document.querySelectorAll('.team-member');
+            teamMembers.forEach(member => {
+                member.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                member.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 合作伙伴悬停效果
+            const partners = document.querySelectorAll('.partner-logo');
+            partners.forEach(partner => {
+                partner.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                partner.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 核心价值观卡片动画
+            const valueCards = document.querySelectorAll('.value-card');
+            valueCards.forEach((card, index) => {
+                // 添加延迟动画
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-12px)';
+                    this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'var(--shadow)';
+                });
+            });
+        });
+        
+        // 平滑滚动到页面顶部
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
